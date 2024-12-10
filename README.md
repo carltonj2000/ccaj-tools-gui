@@ -29,4 +29,6 @@ Add shadcn:
 
 ```bash
 npm install tailwindcss-animate class-variance-authority clsx tailwind-merge lucide-react
+npx shadcn@latest add button card
+npx shadcn@latest add input select table
 ```
