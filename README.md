@@ -32,3 +32,10 @@ npm install tailwindcss-animate class-variance-authority clsx tailwind-merge luc
 npx shadcn@latest add button card
 npx shadcn@latest add input select table
 ```
+
+Add Zustand:
+
+```bash
+npm i zustand
+npm i immer
+```
