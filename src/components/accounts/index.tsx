@@ -25,10 +25,10 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 
-import type { accountsT, instT } from "./accounts";
-import { aType, accounts } from "./accounts";
+import { accountStore } from "./accounts";
 
 export default function Accounts() {
+  const { accounts, total, updateInstitution } = accountStore();
   return (
     <>
       <Card className="flex flex-col items-center justify-center">
@@ -55,14 +55,21 @@ export default function Accounts() {
                   </TableCell>
                   <TableCell>{type}</TableCell>
                   <TableCell>
-                    <Input type="text" size={10} className="text-right" />
+                    <Input
+                      type="text"
+                      size={10}
+                      className="text-right"
+                      onChange={(e) =>
+                        updateInstitution(institution, e.target.value)
+                      }
+                    />
                   </TableCell>
                 </TableRow>
               ))}
               <TableRow>
-                <TableHead>Sum</TableHead>
+                <TableHead>Total</TableHead>
                 <TableHead />
-                <TableHead className="text-right">sum</TableHead>
+                <TableHead className="text-right">{total}</TableHead>
               </TableRow>
             </TableBody>
           </Table>
