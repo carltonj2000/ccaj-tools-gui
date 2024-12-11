@@ -8,16 +8,20 @@ export enum aType {
   crypto = "crypto",
 }
 
+export const aTypeKeys = Object.keys(aType) as Array<aType>;
+
 export type instT = {
   institution: string;
   amount: string;
-  type: aType;
+  amountValid: boolean;
+  accountType: aType;
 };
 
-const account = (institution: string, type: aType): instT => ({
+const account = (institution: string, accountType: aType): instT => ({
   amount: "0",
+  amountValid: true,
   institution,
-  type,
+  accountType,
 });
 
 export type accountsT = Array<instT>;
@@ -32,11 +36,17 @@ export const accounts: accountsT = [
   account("Kraken", aType.crypto),
 ];
 const getTotal = (accounts: accountsT) =>
-  accounts.reduce((acc, inst) => acc + parseInt(inst.amount), 0);
+  accounts.reduce(
+    (acc, inst) =>
+      acc + (Number.isNaN(parseInt(inst.amount)) ? 0 : parseInt(inst.amount)),
+    0
+  );
 
 interface AccountState {
   accounts: accountsT;
   total: number;
+  accountTypes: aType[];
+  clearBalances: () => void;
   addInstitution: (institution: instT) => void;
   updateInstitution: (institution: string, amount: string) => void;
 }
@@ -44,17 +54,26 @@ interface AccountState {
 export const accountStore = create<AccountState>((set) => ({
   accounts: accounts,
   total: getTotal(accounts),
+  accountTypes: aTypeKeys,
+  clearBalances: () => {
+    set((state) => ({ ...state }));
+  },
   addInstitution: (institution: instT) => {
-    const total = getTotal(accounts);
-    set((state) => ({ accounts: [...state.accounts, institution], total }));
+    set((state) => {
+      const total = getTotal(state.accounts);
+      return { ...state, accounts: [...state.accounts, institution], total };
+    });
   },
   updateInstitution: (institution: string, amount: string) => {
     set((state) => {
       const accounts = state.accounts.map((i) =>
-        i.institution === institution ? { ...i, amount } : i
+        i.institution === institution
+          ? { ...i, amount, amountValid: !Number.isNaN(parseInt(amount)) }
+          : i
       );
+      console.log(accounts);
       const total = getTotal(accounts);
-      return { accounts, total };
+      return { ...state, accounts, total };
     });
   },
 }));

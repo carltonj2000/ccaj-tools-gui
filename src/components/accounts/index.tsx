@@ -45,31 +45,36 @@ export default function Accounts() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {accounts.map(({ institution, type, amount }, idx) => (
-                <TableRow>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button>x</Button>
-                      {institution}
-                    </div>
-                  </TableCell>
-                  <TableCell>{type}</TableCell>
-                  <TableCell>
-                    <Input
-                      type="text"
-                      size={10}
-                      className="text-right"
-                      onChange={(e) =>
-                        updateInstitution(institution, e.target.value)
-                      }
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {accounts.map(
+                ({ institution, accountType, amount, amountValid }, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Button>x</Button>
+                        {institution}
+                      </div>
+                    </TableCell>
+                    <TableCell>{accountType}</TableCell>
+                    <TableCell>
+                      <Input
+                        type="text"
+                        size={10}
+                        className={`text-right ${
+                          amountValid ? "" : "bg-red-400"
+                        }`}
+                        value={amount}
+                        onChange={(e) =>
+                          updateInstitution(institution, e.target.value)
+                        }
+                      />
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
               <TableRow>
                 <TableHead>Total</TableHead>
                 <TableHead />
-                <TableHead className="text-right">{total}</TableHead>
+                <TableHead className="text-right pr-5">{total}</TableHead>
               </TableRow>
             </TableBody>
           </Table>
